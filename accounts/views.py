@@ -42,11 +42,18 @@ def login_usero(request):
         
         login(request, user)
         
-        return redirect('profile')
+        return redirect('profiles_create')
     
     return render(request, 'login.html')
         
-        
+def logaut_user(request):
+
+    logout(request)
+    return redirect('login')
+
+
+
+         
         
     
         

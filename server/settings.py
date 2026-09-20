@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts'
+    'accounts',
+    'profiles',
+    'Channel'
 ]
 
 MIDDLEWARE = [
@@ -127,4 +129,7 @@ MAILERS = {
     },
 }
 
-AUTH_USER_MODEL = 'accounts.Users'              
+AUTH_USER_MODEL = 'accounts.Users'    
+
+
+          
