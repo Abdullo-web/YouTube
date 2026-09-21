@@ -4,5 +4,6 @@ from .views import *
 
 urlpatterns = [
     path('create_channel/',create_channel, name='create_channel'),
+    path('verified/',verified, name='verified'),
 
 ]
