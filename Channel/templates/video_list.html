@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <h3>User {{ user.username }}</h3><br>
+        <a href="{% url 'create_channel' %}">Create Channel</a><br>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a><br>
+        <a href="{% url 'register' %}">Register</a><br>
+    {% endif %}
+
+    <h1>Search Video</h1><br>
+    <form method="get">
+        <input type="text" name="search" value="{{ search }}">
+        <button type="submit">Search</button>
+    </form><br>
+
+    <h1>Video List</h1><br>
+    {% for video in videos %}
+        <h3>title <a href="{% url 'video_detail' video.id %}">{{ video.title }}</a></h3><br>
+        <h3>category {{ video.category.title }}</h3><br>
+        <h3>channel <a href="{% url 'channel_detail' video.channel.id %}">{{ video.channel.title }}</a></h3><br>
+        <h3>date {{ video.cr_at }}</h3><br>
+    {% empty %}
+        <h3>No videos</h3><br>
+    {% endfor %}
+</body>
+</html>

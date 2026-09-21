@@ -7,10 +7,16 @@
 </head>
 <body>
     <h1>Profile {{ user.username }}</h1><br>
-    <img src="{{ profile.avatar.url }}" alt=""><br>
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt=""><br>
+    {% endif %}
     <h3>first name {{ user.first_name }}</h3><br>
     <h3>last name {{ user.last_name }}</h3><br>
     <h3>bio {{ profile.bio }}</h3><br>
-    <a href="{% url 'create_channel' %}">Create Channel</a>
+    <a href="{% url 'create_channel' %}">Create Channel</a><br>
+
+    {% if user == profile_user %}
+        <a href="{% url 'profiles_create' %}">Edit Profile</a><br>
+    {% endif %}
 </body>
 </html>

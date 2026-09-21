@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="{% url 'video_list' %}">Menu</a><br>
+    <h1>{{ video.title }}</h1><br>
+    
+    <video controls width="500">
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+    </video><br>
+
+    <h3>description {{ video.description }}</h3><br>
+    <h3>channel <a href="{% url 'channel_detail' video.channel.id %}">{{ video.channel.title }}</a></h3><br>
+    <h3>likes {{ likes_count }}</h3><br>
+
+    {% if user.is_authenticated %}
+        <form action="{% url 'like_video' video.id %}" method="post">
+            {% csrf_token %}
+            {% if is_liked %}
+                <button type="submit">Unlike</button>
+            {% else %}
+                <button type="submit">Like</button>
+            {% endif %}
+        </form><br>
+    {% endif %}
+
+    <h1>Comments</h1><br>
+
+    {% if user.is_authenticated %}
+        <form action="{% url 'comment_create' video.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="3"></textarea><br>
+            <button type="submit">Send</button>
+        </form><br>
+    {% endif %}
+
+    {% for comment in comments %}
+        <h3>user {{ comment.user.username }}</h3><br>
+        <h3>text {{ comment.text }}</h3><br>
+        <h3>date {{ comment.cr_at }}</h3><br>
+
+        {% if comment.replies.all %}
+            {% for reply in comment.replies.all %}
+                <h3>reply {{ reply.user.username }}: {{ reply.text }}</h3><br>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <form action="{% url 'comment_create' video.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                <input type="text" name="text">
+                <button type="submit">Reply</button>
+            </form><br>
+        {% endif %}
+    {% empty %}
+        <h3>No comments</h3><br>
+    {% endfor %}
+</body>
+</html>

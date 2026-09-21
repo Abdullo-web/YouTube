@@ -6,9 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Create Channel</h1><br>
+    <h1>Add Video to {{ channel.title }}</h1><br>
     {% if error %}
-    {{ error }}
+        <h3>{{ error }}</h3><br>
     {% endif %}
 
     <form method="post" enctype="multipart/form-data">
@@ -17,9 +17,15 @@
         <input type="text" name="title"><br>
         <h3>description</h3>
         <textarea name="description" rows="4"></textarea><br>
-        <h3>avatar</h3>
-        <input type="file" name="avatar"><br><br>
-        <button type="submit">Create</button>
+        <h3>category</h3>
+        <select name="category">
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.title }}</option>
+            {% endfor %}
+        </select><br>
+        <h3>video file</h3>
+        <input type="file" name="video_file"><br><br>
+        <button type="submit">Upload</button>
     </form>
 </body>
 </html>

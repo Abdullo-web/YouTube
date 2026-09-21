@@ -136,4 +136,6 @@ EMAIL_HOST_USER = "faridunboboav@gmail.com"
 EMAIL_HOST_PASSWORD = "smxxejktkzbkylkb"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-          
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

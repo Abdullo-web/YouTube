@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="{% url 'video_list' %}">Menu</a><br>
+    
+    {% if channel.avatar %}
+        <img src="{{ channel.avatar.url }}" alt=""><br>
+    {% endif %}
+    <h1>Channel {{ channel.title }}</h1><br>
+    <h3>description {{ channel.description }}</h3><br>
+    <h3>subscribers {{ subscribers_count }}</h3><br>
+    <h3>total likes {{ total_likes }}</h3><br>
+
+    {% if user.is_authenticated %}
+        {% if channel.owner == user %}
+            <a href="{% url 'video_create' channel.id %}">Add Video</a><br>
+        {% else %}
+            <form action="{% url 'follow_channel' channel.id %}" method="post">
+                {% csrf_token %}
+                {% if is_following %}
+                    <button type="submit">Unfollow</button>
+                {% else %}
+                    <button type="submit">Follow</button>
+                {% endif %}
+            </form><br>
+        {% endif %}
+    {% endif %}
+
+    <h1>Videos</h1><br>
+    {% for video in videos %}
+        <h3>title <a href="{% url 'video_detail' video.id %}">{{ video.title }}</a></h3><br>
+        <h3>date {{ video.cr_at }}</h3><br>
+    {% empty %}
+        <h3>No videos in channel</h3><br>
+    {% endfor %}
+</body>
+</html>

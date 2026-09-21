@@ -1,42 +1,26 @@
-from django.shortcuts import render,redirect
-from .models import *
-from accounts.models import Users
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from accounts.models import Users
+
+def profiles_detail(request, username):
+    profile_user = get_object_or_404(Users, username=username)
+    channels = profile_user.channels.all()
+    return render(request, 'profile.html', {
+        'profile_user': profile_user,
+        'channels': channels
+    })
 
 
-
-
+@login_required
 def profiles_create(request):
-    proverka_profile = Profiles.objects.filter(owner_profile = request.user).exists()
-    
-    if proverka_profile:
-        profile = Profiles.objects.get(owner_profile=request.user)
-        return render(request, 'profile.html', {'profile': profile})
-    
-
-    if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        avatar = request.FILES.get('avatar')
-        bio = request.POST.get('bio')
-        
-        request.user.first_name = first_name
-        request.user.last_name = last_name
-        request.user.save()
-        
-        
-        Profiles.objects.create(owner_profile=request.user,avatar = avatar , bio = bio)
-
-            
-        return redirect('profile')
-        
-    return render(request, 'profile_create.html')
-
-
-
-def profile(request):
     user = request.user
-    profile = Profiles.objects.get(owner_profile=request.user)
-    
-    return render(request, 'profile.html', {'user':user , 'profile':profile})
+    if request.method == 'POST':
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.bio = request.POST.get('bio')
+        if request.FILES.get('avatar'):
+            user.avatar = request.FILES.get('avatar')
+        user.save()
+        return redirect('profiles_detail', username=user.username)
 
+    return render(request, 'profile_create.html', {'user': user})

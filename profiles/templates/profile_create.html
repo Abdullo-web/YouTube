@@ -6,13 +6,13 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Profile Create</h1>
-    <form action="" method="post" enctype="multipart/form-data">
+    <h1>Edit Profile</h1><br>
+    <form method="post">
         {% csrf_token %}
-        <input type="text" name="first_name" placeholder="first_name">
-        <input type="text" name="last_name" placeholder="last_name">
-        <input type="text" name="bio" placeholder="bio">
-        <input type="file" name="avatar" placeholder="avatar">
+        <h3>username</h3>
+        <input type="text" name="username" value="{{ user.username }}"><br>
+        <h3>email</h3>
+        <input type="email" name="email" value="{{ user.email }}"><br>
         <button type="submit">Save</button>
     </form>
 </body>
