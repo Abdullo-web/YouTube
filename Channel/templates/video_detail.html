@@ -3,7 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ video.title }}</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --surface-color: #212121;
+            --text-color: #f1f1f1;
+            --text-secondary: #aaa;
+            --accent-color: #3ea6ff;
+            --accent-hover: #65b8ff;
+            --border-color: #3f3f3f;
+            --button-bg: #272727;
+            --button-hover: #3f3f3f;
+        }
+
+        body {
+            font-family: Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        /* Ссылки */
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Навигация (Menu) */
+        body > a:first-child {
+            display: inline-block;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* Заголовок видео */
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 12px 0;
+        }
+
+        /* Видеоплеер */
+        video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            background-color: #000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 12px;
+        }
+
+        /* Описание и метаинформация */
+        h3 {
+            font-size: 14px;
+            font-weight: normal;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        /* Кнопки и формы */
+        button, input[type="submit"] {
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Текстовые поля */
+        textarea, input[type="text"] {
+            width: 100%;
+            max-width: 100%;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Секция комментариев */
+        h1:last-of-type {
+            font-size: 18px;
+            margin-top: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* Оформление блока каждого комментария */
+        /* Так как теги те же, используем отступы на основе последовательности */
+        form + h3, h3 {
+            /* общие стили для текстов */
+        }
+        
+        /* Стили для ответов на комментарии */
+        /* (Применяется к строкам reply) */
+        
+        br {
+            /* Управляем отступами через элементы вместо старых лишних br */
+            display: none; 
+        }
+    </style>
 </head>
 <body>
     <a href="{% url 'video_list' %}">Menu</a><br>

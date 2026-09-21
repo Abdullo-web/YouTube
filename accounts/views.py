@@ -10,20 +10,19 @@ def register_usero(request):
     if request.method == 'POST':
         username = request.POST.get('nom')
         password = request.POST.get('parol')
-        password2 = request.POST.get('parol2')
         email = request.POST.get('email')
 
         if Users.objects.filter(username=username).exists():
             return render(request, 'register.html', {'error': 'imya zanyata'})
 
-        if password != password2:
-            return render(request, 'register.html', {'error': 'password ne sofpadaet'})
 
         if Users.objects.filter(email=email).exists():
             return render(request, 'register.html', {'error': 'email uje suahestvuet'})
 
         user = Users.objects.create_user(username=username, password=password, email=email)
+        
         login(request, user)
+        
         return redirect('verified')
 
     return render(request, 'register.html')

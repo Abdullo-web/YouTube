@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Verification</title>
 </head>
 <body>
     <h1>Verified required</h1><br>
     <h3>Neobkhodimo proyti verifikatsiyu</h3><br>
+
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="code">Vvedite code</label><br>
+        <input type="text" name="code" required><br><br>
+        <button type="submit">Podverdit</button>
+    </form>
+    
+    <br>
     <a href="{% url 'video_list' %}">menu</a>
 </body>
 </html>

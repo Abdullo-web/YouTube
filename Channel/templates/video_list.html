@@ -3,31 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ video.title }}</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --surface-color: #212121;
+            --text-color: #f1f1f1;
+            --text-secondary: #aaa;
+            --accent-color: #3ea6ff;
+            --accent-hover: #65b8ff;
+            --border-color: #3f3f3f;
+            --button-bg: #272727;
+            --button-hover: #3f3f3f;
+        }
+
+        body {
+            font-family: Roboto, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        /* Ссылки */
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Навигация (Menu) */
+        body > a:first-child {
+            display: inline-block;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        /* Заголовок видео */
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 12px 0;
+        }
+
+        /* Видеоплеер */
+        video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            background-color: #000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 12px;
+        }
+
+        /* Описание и метаинформация */
+        h3 {
+            font-size: 14px;
+            font-weight: normal;
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        /* Кнопки и формы */
+        button, input[type="submit"] {
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Текстовые поля */
+        textarea, input[type="text"] {
+            width: 100%;
+            max-width: 100%;
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* Секция комментариев */
+        h1:last-of-type {
+            font-size: 18px;
+            margin-top: 32px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        /* Оформление блока каждого комментария */
+        /* Так как теги те же, используем отступы на основе последовательности */
+        form + h3, h3 {
+            /* общие стили для текстов */
+        }
+        
+        /* Стили для ответов на комментарии */
+        /* (Применяется к строкам reply) */
+        
+        br {
+            /* Управляем отступами через элементы вместо старых лишних br */
+            display: none; 
+        }
+    </style>
 </head>
 <body>
+    <a href="{% url 'video_list' %}">Menu</a><br>
+    <h1>{{ video.title }}</h1><br>
+    
+    <video controls width="500">
+        <source src="{{ video.video_file.url }}" type="video/mp4">
+    </video><br>
+
+    <h3>description {{ video.description }}</h3><br>
+    <h3>channel <a href="{% url 'channel_detail' video.channel.id %}">{{ video.channel.title }}</a></h3><br>
+    <h3>likes {{ likes_count }}</h3><br>
+
     {% if user.is_authenticated %}
-        <h3>User {{ user.username }}</h3><br>
-        <a href="{% url 'create_channel' %}">Create Channel</a><br>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a><br>
-        <a href="{% url 'register' %}">Register</a><br>
+        <form action="{% url 'like_video' video.id %}" method="post">
+            {% csrf_token %}
+            {% if is_liked %}
+                <button type="submit">Unlike</button>
+            {% else %}
+                <button type="submit">Like</button>
+            {% endif %}
+        </form><br>
     {% endif %}
 
-    <h1>Search Video</h1><br>
-    <form method="get">
-        <input type="text" name="search" value="{{ search }}">
-        <button type="submit">Search</button>
-    </form><br>
+    <h1>Comments</h1><br>
 
-    <h1>Video List</h1><br>
-    {% for video in videos %}
-        <h3>title <a href="{% url 'video_detail' video.id %}">{{ video.title }}</a></h3><br>
-        <h3>category {{ video.category.title }}</h3><br>
-        <h3>channel <a href="{% url 'channel_detail' video.channel.id %}">{{ video.channel.title }}</a></h3><br>
-        <h3>date {{ video.cr_at }}</h3><br>
+    {% if user.is_authenticated %}
+        <form action="{% url 'comment_create' video.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="3"></textarea><br>
+            <button type="submit">Send</button>
+        </form><br>
+    {% endif %}
+
+    {% for comment in comments %}
+        <h3>user {{ comment.user.username }}</h3><br>
+        <h3>text {{ comment.text }}</h3><br>
+        <h3>date {{ comment.cr_at }}</h3><br>
+
+        {% if comment.replies.all %}
+            {% for reply in comment.replies.all %}
+                <h3>reply {{ reply.user.username }}: {{ reply.text }}</h3><br>
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <form action="{% url 'comment_create' video.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                <input type="text" name="text">
+                <button type="submit">Reply</button>
+            </form><br>
+        {% endif %}
     {% empty %}
-        <h3>No videos</h3><br>
+        <h3>No comments</h3><br>
     {% endfor %}
 </body>
 </html>
